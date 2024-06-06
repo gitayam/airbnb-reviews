@@ -40,11 +40,11 @@ def generate_review(name, rating, comments):
 def main():
     # Set up argument parser
     parser = argparse.ArgumentParser(description='Generate a guest review.')
-    parser.add_argument('name', type=str, help='The name to be included in the review.')
+    parser.add_argument('name', nargs='+', type=str, help='The name to be included in the review.')
     
     # Parse arguments
     args = parser.parse_args()
-    name = args.name
+    name = ' '.join(args.name)
 
     rating = get_user_input('Please rate the service (1 for bad, 2 for ok, 3 for good): ')
     comments = get_user_input('Please provide any specific comments: ')
