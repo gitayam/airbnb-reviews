@@ -24,7 +24,7 @@ pip3 install -r requirements.txt
 Run the script using Python:
 
 ```shell
-python generate_review.py
+python3 generate_reviews.py
 ```
 
 ## Requirements
