@@ -2,3 +2,4 @@
 openai
 pyperclip
 python-dotenv
+argparse

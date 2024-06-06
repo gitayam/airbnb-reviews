@@ -32,6 +32,7 @@ python3 generate_reviews.py
 - Python 3
 - openai
 - pyperclip
+- python-dotenv
 
 ## Dependencies
 
@@ -40,6 +41,7 @@ The required dependencies are listed in the `requirements.txt` file:
 ```text
 openai
 pyperclip
+python-dotenv
 ```
 
 ## Example Usage
