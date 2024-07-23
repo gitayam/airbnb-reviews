@@ -1,5 +1,3 @@
-[]: # Title: Airbnb Review Generator
-[]: # Description: A script for generating polite and professional reviews for Airbnb guests using OpenAI's GPT.
 # Airbnb Review Generator
 
 This repository contains a script for generating polite and professional reviews for Airbnb guests using OpenAI's GPT. It supports both command-line and web-based interfaces, with the web interface designed to be hosted via Docker.
