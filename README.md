@@ -2,6 +2,7 @@
 
 This repository contains a script for generating polite and professional reviews for Airbnb guests using OpenAI's GPT. It supports both command-line and web-based interfaces, with the web interface designed to be hosted via Docker.
 
+See a live demo of the web interface [here](https://reviews.managerentals.org/).
 ## Features
 
 - **CLI Interface**: A simple script that prompts the user for details and generates a review.
