@@ -1,19 +1,35 @@
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for, session, flash
 
 app = Flask(__name__)
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Initialize the OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-host_name = os.getenv("HOST_NAME")
-home_details = os.getenv("HOME_DETAILS")
-model = os.getenv("MODEL")
-port = int(os.getenv("PORT_NUMBER", 5000))
+# Set secret key from .env file
+app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')  # Replace 'default_secret_key' with a strong, random secret key
+
+def get_env_variable(var_name):
+    return os.getenv(var_name) or session.get(var_name)
+
+# Initialize the OpenAI client with placeholders
+client = None
+host_name = None
+home_details = None
+model = None
+
+def initialize_client():
+    global client, host_name, home_details, model
+    api_key = get_env_variable("OPENAI_API_KEY")
+    if not api_key:
+        return False
+    client = OpenAI(api_key=api_key)
+    host_name = get_env_variable("HOST_NAME")
+    home_details = get_env_variable("HOME_DETAILS")
+    model = get_env_variable("MODEL")
+    return True
 
 def convert_rating_to_description(rating):
     return {
@@ -68,10 +84,26 @@ def generate_private_note_to_guest(name, rating, communication, cleanliness, hou
 
 @app.route('/')
 def index():
+    if not initialize_client():
+        flash("Please set the OpenAI API key in the .env file or provide it on the setup page.")
+        return redirect(url_for('setup'))
     return render_template('index.html')
+
+@app.route('/setup', methods=['GET', 'POST'])
+def setup():
+    if request.method == 'POST':
+        session['OPENAI_API_KEY'] = request.form['api_key']
+        session['MODEL'] = request.form['model']
+        session['HOST_NAME'] = request.form['host_name']
+        session['HOME_DETAILS'] = request.form['home_details']
+        return redirect(url_for('index'))
+    return render_template('setup.html')
 
 @app.route('/generate_review', methods=['POST'])
 def generate_review_route():
+    if not initialize_client():
+        flash("Please set the OpenAI API key in the .env file or provide it on the setup page.")
+        return redirect(url_for('setup'))
     name = request.form['name']
     rating = request.form['rating']
     communication = request.form['communication']
@@ -84,4 +116,4 @@ def generate_review_route():
     return render_template('index.html', review=review, note=note)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT_NUMBER", 5000)))
