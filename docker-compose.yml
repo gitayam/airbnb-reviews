@@ -11,3 +11,4 @@ services:
       - PORT_NUMBER=${PORT_NUMBER}
     volumes:
       - .:/app
+    restart: unless-stopped
