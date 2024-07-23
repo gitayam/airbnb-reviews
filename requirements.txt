@@ -3,3 +3,4 @@ openai
 pyperclip
 python-dotenv
 argparse
+colorama

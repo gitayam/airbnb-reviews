@@ -3,6 +3,18 @@ import pyperclip
 import os
 from dotenv import load_dotenv
 import argparse
+from colorama import init
+
+# Define formatting
+HEADER = '\033[95m'
+BLUE = '\033[94m'
+CYAN = '\033[96m'
+GREEN = '\033[92m'
+YELLOW = '\033[93m'
+RED = '\033[91m'
+ENDC = '\033[0m'
+BOLD = '\033[1m'
+UNDERLINE = '\033[4m'
 
 # Load environment variables from .env file
 load_dotenv()
@@ -107,24 +119,30 @@ def main():
     name = ' '.join(args.name)
     # Get user input for ratings and comments
     rating = get_user_rating('Please rate the service (1 for bad, 2 for ok, 3 for good): ')
+    print('\n' + '-' * 50 + '\n')
     # optional rating for communication, cleanliness, and house rules default to 2 if not provided
-    communication = get_user_rating('Communication (1 for bad, 2 for ok, 3 for good): ')
-    cleanliness = get_user_rating('Cleanliness (1 for bad, 2 for ok, 3 for good): ')
-    houst_rules = get_user_rating('Ability to Follow House Rules (1 for bad, 2 for ok, 3 for good): ')
+    communication = get_user_rating('{BOLD}Communication{ENDC} (1 for bad, 2 for ok, 3 for good): ')
+    cleanliness = get_user_rating('{BOLD}Cleanliness{ENDC} (1 for bad, 2 for ok, 3 for good): ')
+    houst_rules = get_user_rating('Ability to Follow {BOLD}House Rules{ENDC} (1 for bad, 2 for ok, 3 for good): ')
     comments = get_user_comment('Additional comments for Review (optional): ')
     private_note = get_user_comment('Private Note Comments (optional): ')
+    # Print line breaks with seperators for formatting
     review = generate_review(name, rating, communication, cleanliness, houst_rules, comments)
 
     print('Generated Review:')
+    print('\n' + '-' * 50 + '\n')
     print(review)
-
     pyperclip.copy(review)
     print('The review has been copied to the clipboard.')
     #prompt user to press any button to contiue before generating and printing and copying to clipboard the private  note
+    
+    print('\n' + '-' * 50 + '\n')
+    print('\n' + '-' * 50 + '\n')
     print('Press enter to continue...')
     input()
     private_note = generate_private_note_to_guest(name, rating, communication, cleanliness, houst_rules, private_note)
     print('Generated Private Note:')
+    print('\n' + '-' * 50 + '\n')
     print(private_note)
     pyperclip.copy(private_note)
     print('The private note has been copied to the clipboard.')
