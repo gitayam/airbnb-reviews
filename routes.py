@@ -88,20 +88,20 @@ def generate_private_note_to_guest(name, rating, cleanliness, house_rules, priva
 def generate_review_request(name, review, private_note):
     if private_note:
         prompt = (
-            f"Generate a message to the guest letting them know you just reviewed them and that you would like them to review you back when they have a chance. Include a snippet of the review you left for them.\n"
-            f"Guest Name: {name}\n"
+            f"Generate a message to send to {name} on airbnb letting them know you just reviewed their stay and that you would like them to provide feedback and to review you back when they have a chance. Include a snippet of the review you left for them.\n"
+            f"Guest Name to use {name}\n"
             f"Review to include a snippet of: {review}\n"
             f"Private Note to consider: {private_note}\n"
             f"My name is {host_name} I am the host.\n"
-            "The message should be less than 4 sentences long, friendly, and should encourage the guest to leave a review. 1-3 emoji can be used."
+            "The message should be less than 4 sentences long, friendly, and should encourage the guest to leave a review. 1-3 emoji can be used. Don't create a subject line."
         )
     else:
         prompt = (
-            f"Generate a message to the guest letting them know you just reviewed them and that you would like them to review you back when they have a chance. Include a snippet of the review you left for them.\n"
-            f"Guest Name: {name}\n"
+            f"Generate a message to send to {name} on airbnb letting them know you just reviewed their stay and that you would like them to provide feedback and to review you back when they have a chance. Include a snippet of the review you left for them\n"
+            f"Guest Name to use {name}\n"
             f"Review to include a snippet of: {review}\n"
             f"My name is {host_name} I am the host.\n"
-            "The message should be less than 4 sentences long, friendly, and should encourage the guest to leave a review. 1-3 emoji can be used."
+            "The message should be less than 4 sentences long, friendly, and should encourage the guest to leave a review. 1-3 emoji can be used. Don't create a subject line."
         )
     response = client.chat.completions.create(
         model=model,
