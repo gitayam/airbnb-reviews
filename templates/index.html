@@ -62,7 +62,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6 d-flex align-items-center">
                             <label for="name" class="mr-2">Name:</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ name }}" required>
                             <div class="invalid-feedback">
                                 Please enter a name.
                             </div>
@@ -70,15 +70,15 @@
                         <div class="form-group col-md-6 d-flex align-items-center">
                             <label class="mr-2">Overall Rating:</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="rating1" name="rating" value="1">
+                                <input class="form-check-input" type="radio" id="rating1" name="rating" value="1" {% if rating == '1' %}checked{% endif %}>
                                 <label class="form-check-label" for="rating1">1</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="rating2" name="rating" value="2" checked>
+                                <input class="form-check-input" type="radio" id="rating2" name="rating" value="2" {% if rating == '2' %}checked{% endif %}>
                                 <label class="form-check-label" for="rating2">2</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="rating3" name="rating" value="3">
+                                <input class="form-check-input" type="radio" id="rating3" name="rating" value="3" {% if rating == '3' %}checked{% endif %}>
                                 <label class="form-check-label" for="rating3">3</label>
                             </div>
                         </div>
@@ -87,15 +87,15 @@
                     <div class="form-group d-flex align-items-center">
                         <label class="mr-2">Communication:</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="communication1" name="communication" value="1">
+                            <input class="form-check-input" type="radio" id="communication1" name="communication" value="1" {% if communication == '1' %}checked{% endif %}>
                             <label class="form-check-label" for="communication1">1</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="communication2" name="communication" value="2" checked>
+                            <input class="form-check-input" type="radio" id="communication2" name="communication" value="2" {% if communication == '2' %}checked{% endif %}>
                             <label class="form-check-label" for="communication2">2</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="communication3" name="communication" value="3">
+                            <input class="form-check-input" type="radio" id="communication3" name="communication" value="3" {% if communication == '3' %}checked{% endif %}>
                             <label class="form-check-label" for="communication3">3</label>
                         </div>
                     </div>
@@ -103,15 +103,15 @@
                     <div class="form-group d-flex align-items-center">
                         <label class="mr-2">Cleanliness:</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="cleanliness1" name="cleanliness" value="1">
+                            <input class="form-check-input" type="radio" id="cleanliness1" name="cleanliness" value="1" {% if cleanliness == '1' %}checked{% endif %}>
                             <label class="form-check-label" for="cleanliness1">1</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="cleanliness2" name="cleanliness" value="2" checked>
+                            <input class="form-check-input" type="radio" id="cleanliness2" name="cleanliness" value="2" {% if cleanliness == '2' %}checked{% endif %}>
                             <label class="form-check-label" for="cleanliness2">2</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="cleanliness3" name="cleanliness" value="3">
+                            <input class="form-check-input" type="radio" id="cleanliness3" name="cleanliness" value="3" {% if cleanliness == '3' %}checked{% endif %}>
                             <label class="form-check-label" for="cleanliness3">3</label>
                         </div>
                     </div>
@@ -119,27 +119,27 @@
                     <div class="form-group d-flex align-items-center">
                         <label class="mr-2">House Rules:</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="house_rules1" name="house_rules" value="1">
+                            <input class="form-check-input" type="radio" id="house_rules1" name="house_rules" value="1" {% if house_rules == '1' %}checked{% endif %}>
                             <label class="form-check-label" for="house_rules1">1</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="house_rules2" name="house_rules" value="2" checked>
+                            <input class="form-check-input" type="radio" id="house_rules2" name="house_rules" value="2" {% if house_rules == '2' %}checked{% endif %}>
                             <label class="form-check-label" for="house_rules2">2</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="house_rules3" name="house_rules" value="3">
+                            <input class="form-check-input" type="radio" id="house_rules3" name="house_rules" value="3" {% if house_rules == '3' %}checked{% endif %}>
                             <label class="form-check-label" for="house_rules3">3</label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="comments">Comments:</label>
-                        <textarea class="form-control" id="comments" name="comments"></textarea>
+                        <textarea class="form-control" id="comments" name="comments">{{ comments }}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="private_note">Private Note:</label>
-                        <textarea class="form-control" id="private_note" name="private_note"></textarea>
+                        <textarea class="form-control" id="private_note" name="private_note">{{ private_note }}</textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Generate Review</button>
@@ -163,6 +163,10 @@
             </div>
         </div>
     </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         // Copy to clipboard function
         function copyToClipboard(elementId) {
@@ -174,9 +178,5 @@
             });
         }
     </script>
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

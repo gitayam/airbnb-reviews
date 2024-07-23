@@ -21,6 +21,8 @@ def initialize_client():
     host_name = get_env_variable("HOST_NAME")
     home_details = get_env_variable("HOME_DETAILS")
     model = get_env_variable("MODEL")
+    if not model:
+        return False
     return True
 
 def convert_rating_to_description(rating):
@@ -43,7 +45,7 @@ def generate_review(name, rating, communication, cleanliness, house_rules, comme
         f"Cleanliness: {cleanliness_description}\n"
         f"House Rules: {house_rules_description}\n"
         f"Comments: {comments}\n"
-        "The review should be less than 4 sentences long. 1-3 emoji can be used. this review is written for other hosts to see."
+        "The review should be less than 4 sentences long. 1-3 emoji can be used. This review is written for other hosts to see."
     )
     response = client.chat.completions.create(
         model=model,
@@ -56,7 +58,6 @@ def generate_private_note_to_guest(name, rating, cleanliness, house_rules, priva
     cleanliness_description = convert_rating_to_description(cleanliness)
     house_rules_description = convert_rating_to_description(house_rules)
     
-    # if private note is provide use the following prompt:
     if private_note:
         prompt = (
             f"Generate a private note (less than 4 sentences long, friendly) to the guest from Airbnb which I host based on the following details:\n"
@@ -78,7 +79,7 @@ def generate_private_note_to_guest(name, rating, cleanliness, house_rules, priva
             f"House Rules: {house_rules_description}\n"
             f"Home Details: {home_details}\n"
             f"Our name to close out the message {host_name}, \n"
-            "1-3 emoji can be used. The goal of the note should be influencing the guest to save our Airbnb listing for next time."
+            "1-3 emoji can be used. The goal of the note should be influencing the guest to save our Airbnb listing for next time unless the rating is bad."
         )
     response = client.chat.completions.create(
         model=model,
@@ -97,17 +98,20 @@ def index():
 def setup():
     if request.method == 'POST':
         session['OPENAI_API_KEY'] = request.form['api_key']
-        session['MODEL'] = request.form['model']
-        session['HOST_NAME'] = request.form['host_name']
-        session['HOME_DETAILS'] = request.form['home_details']
+        session['MODEL'] = request.form['model'] or 'gpt-4o-mini'
+        session['HOST_NAME'] = request.form['host_name'] or 'John Doe'
+        session['HOME_DETAILS'] = request.form['home_details'] or 'Home Near the Beach'
         return redirect(url_for('main.index'))
-    return render_template('setup.html')
+    
+    api_key_set = bool(session.get('OPENAI_API_KEY'))
+    return render_template('setup.html', api_key_set=api_key_set, session=session)
 
 @main.route('/generate_review', methods=['POST'])
 def generate_review_route():
     if not initialize_client():
         flash("Please set the OpenAI API key in the .env file or provide it on the setup page.")
         return redirect(url_for('main.setup'))
+    
     name = request.form['name']
     rating = request.form['rating']
     communication = request.form['communication']
@@ -115,6 +119,8 @@ def generate_review_route():
     house_rules = request.form['house_rules']
     comments = request.form['comments']
     private_note = request.form['private_note']
+    
     review = generate_review(name, rating, communication, cleanliness, house_rules, comments)
     note = generate_private_note_to_guest(name, rating, cleanliness, house_rules, private_note)
-    return render_template('index.html', review=review, note=note)
+    
+    return render_template('index.html', review=review, note=note, name=name, rating=rating, communication=communication, cleanliness=cleanliness, house_rules=house_rules, comments=comments, private_note=private_note)

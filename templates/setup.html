@@ -5,16 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setup Configuration</title>
     <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link id="themeStylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .dark-theme {
+            --bg-color: #121212;
+            --text-color: #fff;
+            --border-color: #333;
+        }
+        .light-theme {
+            --bg-color: #fff;
+            --text-color: #000;
+            --border-color: #ccc;
+        }
+    </style>
 </head>
-<body>
+<body class="light-theme">
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="text-center mb-4">Setup Configuration</h1>
             <button id="toggleTheme" class="btn btn-secondary">Toggle Theme</button>
         </div>
-        {% if not session.get('OPENAI_API_KEY') %}
+        {% if not api_key_set %}
         <div class="alert alert-danger" role="alert">
             <strong>API Key Missing!</strong> Please enter your OpenAI API key. <a href="https://platform.openai.com/account/api-keys" target="_blank">Get your API key here.</a>
         </div>
@@ -29,26 +44,27 @@
             </div>
             <div class="form-group">
                 <label for="model">Model:</label>
-                <input type="text" class="form-control" id="model" name="model" value="{{ session.get('MODEL', '') }}" required>
+                <input type="text" class="form-control" id="model" name="model" value="{{ session.get('MODEL', 'gpt-4o-mini') }}" required>
                 <div class="invalid-feedback">
                     Please enter the model name.
                 </div>
             </div>
             <div class="form-group">
                 <label for="host_name">Host Name:</label>
-                <input type="text" class="form-control" id="host_name" name="host_name" value="{{ session.get('HOST_NAME', '') }}" required>
+                <input type="text" class="form-control" id="host_name" name="host_name" value="{{ session.get('HOST_NAME', 'John Doe') }}" required>
                 <div class="invalid-feedback">
                     Please enter the host name.
                 </div>
             </div>
             <div class="form-group">
                 <label for="home_details">Home Details:</label>
-                <input type="text" class="form-control" id="home_details" name="home_details" value="{{ session.get('HOME_DETAILS', '') }}" required>
+                <input type="text" class="form-control" id="home_details" name="home_details" value="{{ session.get('HOME_DETAILS', 'Home Near the Beach') }}" required>
                 <div class="invalid-feedback">
                     Please enter the home details.
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Save Configuration</button>
+            <button type="button" id="clearFields" class="btn btn-secondary">Clear Fields</button>
         </form>
     </div>
     <!-- Bootstrap JS and dependencies -->
@@ -59,22 +75,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             const themeStylesheet = document.getElementById('themeStylesheet');
             const toggleThemeButton = document.getElementById('toggleTheme');
+            const body = document.body;
 
             // Check for stored theme preference in local storage
             const storedTheme = localStorage.getItem('theme');
             if (storedTheme) {
-                themeStylesheet.href = storedTheme;
+                body.classList.remove('light-theme', 'dark-theme');
+                body.classList.add(storedTheme);
             }
 
             // Toggle theme and store preference in local storage
             toggleThemeButton.addEventListener('click', function() {
-                if (themeStylesheet.href.includes('bootstrap.min.css')) {
-                    themeStylesheet.href = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap-dark.min.css';
-                    localStorage.setItem('theme', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap-dark.min.css');
+                if (body.classList.contains('light-theme')) {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                    localStorage.setItem('theme', 'dark-theme');
                 } else {
-                    themeStylesheet.href = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css';
-                    localStorage.setItem('theme', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                    localStorage.setItem('theme', 'light-theme');
                 }
+            });
+
+            // Clear fields button functionality
+            document.getElementById('clearFields').addEventListener('click', function() {
+                document.getElementById('api_key').value = '';
+                document.getElementById('model').value = 'gpt-4o-mini';
+                document.getElementById('host_name').value = 'John Doe';
+                document.getElementById('home_details').value = 'Home Near the Beach';
             });
         });
     </script>
