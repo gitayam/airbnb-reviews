@@ -111,8 +111,8 @@ def main():
     communication = get_user_rating('Communication (1 for bad, 2 for ok, 3 for good): ')
     cleanliness = get_user_rating('Cleanliness (1 for bad, 2 for ok, 3 for good): ')
     houst_rules = get_user_rating('Ability to Follow House Rules (1 for bad, 2 for ok, 3 for good): ')
-    comments = get_user_comment('Additional comments for Review: (optional) ')
-    private_note = get_user_comment('Private Note Comments: (optional) ')
+    comments = get_user_comment('Additional comments for Review (optional): ')
+    private_note = get_user_comment('Private Note Comments (optional): ')
     review = generate_review(name, rating, communication, cleanliness, houst_rules, comments)
 
     print('Generated Review:')
