@@ -1,0 +1,7 @@
+services:
+  airbnb-review-generator:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "${PORT_NUMBER}:${PORT_NUMBER}"
