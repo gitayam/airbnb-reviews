@@ -14,6 +14,7 @@ This repository contains a script for generating polite and professional reviews
 ```shell
 git clone https://github.com/yourusername/airbnb-reviews.git
 cd airbnb-reviews
+cp .env-template .env
 ```
 
 ### Create a Virtual Environment
