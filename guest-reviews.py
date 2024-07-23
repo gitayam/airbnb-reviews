@@ -9,6 +9,8 @@ load_dotenv()
 
 # Initialize the OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+host_name = os.getenv("HOST_NAME")
+model = os.getenv("MODEL")
 
 # Function to get user input
 def get_user_input(prompt):
@@ -48,11 +50,11 @@ def generate_private_note_to_guest(name, rating, comments):
         f"Name: {name}\n"
         f"Rating: {rating_description}\n"
         f"Comments: {comments}\n"
-        "The note should be less than 3 sentences long and should welcome the guest back anytime. the goal of the note should be influencing the guest to save our airbnb listing for next time."
+        f"My name is {host_name} and I am the host of this Airbnb listing.\n"
+        "The note should be less than 3 sentences long, friendly, and should welcome the guest back anytime. the goal of the note should be influencing the guest to save our airbnb listing for next time."
     )
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
 
