@@ -14,47 +14,74 @@ model = os.getenv("MODEL")
 
 # Function to get user input
 def get_user_input(prompt):
-    return input(prompt)
+    # Get user input and validate that it is a valid rating
+    while True:
+        try:
+            value = int(input(prompt))
+            if value not in [1, 2, 3]:
+                raise ValueError
+            return value
+        except ValueError:
+            print('Please enter a valid rating (1, 2, or 3).')
 
-# Function to generate review using OpenAI API
-def generate_review(name, rating, comments):
-    rating_description = {
+def convert_rating_to_description(rating):
+    # Convert rating to description based on the following scale:
+    # change the rating to the corresponding description desired. This impacts the gpt prompt 
+    return {
         '1': 'bad',
         '2': 'ok',
-        '3': 'good'
+        '3': 'Great'
     }.get(rating, 'unknown')
 
+def generate_review(name, rating, communication, cleanliness, houst_rules, comments):
+    # this function generates a review for the guest based on the ratings and comments provided
+    # Get rating description for rating, communication, cleanliness, and house rules
+    rating_description = convert_rating_to_description(rating)
+    communication_description = convert_rating_to_description(communication)
+    cleanliness_description = convert_rating_to_description(cleanliness)
+    houst_rules_description = convert_rating_to_description(houst_rules)
+
     prompt = (
+        # this is the prompt that will be sent to the gpt model to generate the review
         f"Generate a brief, kind, polite, and professional guest review for Airbnb which I host based on the following details:\n"
         f"Name: {name}\n"
         f"Rating: {rating_description}\n"
+        f"Communication: {communication_description}\n"
+        f"Cleanliness: {cleanliness_description}\n"
+        f"House Rules: {houst_rules_description}\n"
         f"Comments: {comments}\n"
         "The review should be less than 4 sentences long."
     )
 
     response = client.chat.completions.create(
+        # this is the gpt model that will be used to generate the review and return the response
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
 
     return response.choices[0].message.content.strip()
-def generate_private_note_to_guest(name, rating, comments):
-    rating_description = {
-        '1': 'bad',
-        '2': 'ok',
-        '3': 'good'
-    }.get(rating, 'unknown')
+
+def generate_private_note_to_guest(name, rating, communication, cleanliness, houst_rules, comments):
+    # Get rating description for rating, communication, cleanliness, and house rules
+    rating_description = convert_rating_to_description(rating)
+    communication_description = convert_rating_to_description(communication)
+    cleanliness_description = convert_rating_to_description(cleanliness)
+    houst_rules_description = convert_rating_to_description(houst_rules)
 
     prompt = (
         f"Generate a private note to the guest for Airbnb which I host based on the following details:\n"
         f"Name: {name}\n"
         f"Rating: {rating_description}\n"
+        f"Communication: {communication_description}\n"
+        f"Cleanliness: {cleanliness_description}\n"
+        f"House Rules: {houst_rules_description}\n"
         f"Comments: {comments}\n"
         f"My name is {host_name} and I am the host of this Airbnb listing.\n"
         "The note should be less than 3 sentences long, friendly, and should welcome the guest back anytime. the goal of the note should be influencing the guest to save our airbnb listing for next time."
     )
 
     response = client.chat.completions.create(
+        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
 
@@ -67,8 +94,12 @@ def main():
     # Parse arguments
     args = parser.parse_args()
     name = ' '.join(args.name)
-
+    # Get user input for ratings and comments
     rating = get_user_input('Please rate the service (1 for bad, 2 for ok, 3 for good): ')
+    # optional rating for communication, cleanliness, and house rules default to 2 if not provided
+    communication = get_user_input('Please rate the communication (1 for bad, 2 for ok, 3 for good): ')
+    cleanliness = get_user_input('Please rate the cleanliness (1 for bad, 2 for ok, 3 for good): ')
+    houst_rules = get_user_input('Please rate the house rules (1 for bad, 2 for ok, 3 for good): ')
     comments = get_user_input('Please provide any specific comments: ')
 
     review = generate_review(name, rating, comments)
