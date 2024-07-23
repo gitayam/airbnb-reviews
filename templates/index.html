@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Airbnb Review Generator</title>
-    
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
             display: flex;
             justify-content: space-between;
+            margin-top: 20px;
         }
         .form-container, .result-container {
             width: 45%;
@@ -24,50 +26,105 @@
     </style>
 </head>
 <body>
-    <h1>Airbnb Review Generator</h1>
+    <div class="container">
+        <h1 class="my-4">Airbnb Review Generator</h1>
+    </div>
     <div class="container">
         <div class="form-container">
-            <form action="/generate_review" method="post">
-                <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name"><br><br>
+            <form action="/generate_review" method="post" class="needs-validation" novalidate>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    <div class="invalid-feedback">
+                        Please enter a name.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Overall Rating (1-3):</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="rating1" name="rating" value="1">
+                        <label class="form-check-label" for="rating1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="rating2" name="rating" value="2" checked>
+                        <label class="form-check-label" for="rating2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="rating3" name="rating" value="3">
+                        <label class="form-check-label" for="rating3">3</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Communication (1-3):</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="communication1" name="communication" value="1">
+                        <label class="form-check-label" for="communication1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="communication2" name="communication" value="2" checked>
+                        <label class="form-check-label" for="communication2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="communication3" name="communication" value="3">
+                        <label class="form-check-label" for="communication3">3</label>
+                    </div>
+                </div>
 
-                <label for="rating">Overall Rating (1-3):</label><br>
-                <input type="radio" id="rating1" name="rating" value="1"> 1
-                <input type="radio" id="rating2" name="rating" value="2" checked> 2
-                <input type="radio" id="rating3" name="rating" value="3"> 3<br><br>
+                <div class="form-group">
+                    <label>Cleanliness (1-3):</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="cleanliness1" name="cleanliness" value="1">
+                        <label class="form-check-label" for="cleanliness1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="cleanliness2" name="cleanliness" value="2" checked>
+                        <label class="form-check-label" for="cleanliness2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="cleanliness3" name="cleanliness" value="3">
+                        <label class="form-check-label" for="cleanliness3">3</label>
+                    </div>
+                </div>
 
-                <label for="communication">Communication (1-3):</label><br>
-                <input type="radio" id="communication1" name="communication" value="1"> 1
-                <input type="radio" id="communication2" name="communication" value="2" checked> 2
-                <input type="radio" id="communication3" name="communication" value="3"> 3<br><br>
+                <div class="form-group">
+                    <label>House Rules (1-3):</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="house_rules1" name="house_rules" value="1">
+                        <label class="form-check-label" for="house_rules1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="house_rules2" name="house_rules" value="2" checked>
+                        <label class="form-check-label" for="house_rules2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="house_rules3" name="house_rules" value="3">
+                        <label class="form-check-label" for="house_rules3">3</label>
+                    </div>
+                </div>
 
-                <label for="cleanliness">Cleanliness (1-3):</label><br>
-                <input type="radio" id="cleanliness1" name="cleanliness" value="1"> 1
-                <input type="radio" id="cleanliness2" name="cleanliness" value="2" checked> 2
-                <input type="radio" id="cleanliness3" name="cleanliness" value="3"> 3<br><br>
+                <div class="form-group">
+                    <label for="comments">Comments:</label>
+                    <textarea class="form-control" id="comments" name="comments"></textarea>
+                </div>
 
-                <label for="house_rules">House Rules (1-3):</label><br>
-                <input type="radio" id="house_rules1" name="house_rules" value="1"> 1
-                <input type="radio" id="house_rules2" name="house_rules" value="2" checked> 2
-                <input type="radio" id="house_rules3" name="house_rules" value="3"> 3<br><br>
+                <div class="form-group">
+                    <label for="private_note">Private Note:</label>
+                    <textarea class="form-control" id="private_note" name="private_note"></textarea>
+                </div>
 
-                <label for="comments">Comments:</label><br>
-                <textarea id="comments" name="comments"></textarea><br><br>
-
-                <label for="private_note">Private Note:</label><br>
-                <textarea id="private_note" name="private_note"></textarea><br><br>
-
-                <input type="submit" value="Generate Review">
+                <button type="submit" class="btn btn-primary">Generate Review</button>
             </form>
         </div>
         <div class="result-container">
             {% if review %}
             <h2>Generated Review</h2>
             <p id="review">{{ review }}</p>
-            <button class="copy-button" onclick="copyToClipboard('review')">Copy Review</button>
+            <button class="btn btn-secondary copy-button" onclick="copyToClipboard('review')">Copy Review</button>
             <h2>Generated Private Note</h2>
             <p id="note">{{ note }}</p>
-            <button class="copy-button" onclick="copyToClipboard('note')">Copy Note</button>
+            <button class="btn btn-secondary copy-button" onclick="copyToClipboard('note')">Copy Note</button>
             {% endif %}
         </div>
     </div>
@@ -81,5 +138,9 @@
             });
         }
     </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
