@@ -10,26 +10,36 @@ load_dotenv()
 # Initialize the OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 host_name = os.getenv("HOST_NAME")
+home_details = os.getenv("HOME_DETAILS")
 model = os.getenv("MODEL")
 
 # Function to get user input
-def get_user_input(prompt):
+def get_user_rating(prompt):
     # Get user input and validate that it is a valid rating
+    # if no rating is provided, default to 2
     while True:
         try:
-            value = int(input(prompt))
-            if value not in [1, 2, 3]:
-                raise ValueError
-            return value
-        except ValueError:
-            print('Please enter a valid rating (1, 2, or 3).')
+            rating = input(prompt)
+            if rating == '':
+                return '2'
+            if rating not in ['1', '2', '3']:
+                raise ValueError('Rating must be 1, 2, or 3.')
+            return rating
+        except ValueError as e:
+            print(e)
+def get_user_comment(prompt):
+    # Get user input for comments
+    # if no comments are provided, default to an empty string
+    comments = input(prompt)
+    return comments
+    
 
 def convert_rating_to_description(rating):
     # Convert rating to description based on the following scale:
     # change the rating to the corresponding description desired. This impacts the gpt prompt 
     return {
-        '1': 'bad',
-        '2': 'ok',
+        '1': 'Terrible',
+        '2': 'Good',
         '3': 'Great'
     }.get(rating, 'unknown')
 
@@ -50,7 +60,7 @@ def generate_review(name, rating, communication, cleanliness, houst_rules, comme
         f"Cleanliness: {cleanliness_description}\n"
         f"House Rules: {houst_rules_description}\n"
         f"Comments: {comments}\n"
-        "The review should be less than 4 sentences long."
+        "The review should be less than 4 sentences long.One emoji can be used."
     )
 
     response = client.chat.completions.create(
@@ -61,7 +71,7 @@ def generate_review(name, rating, communication, cleanliness, houst_rules, comme
 
     return response.choices[0].message.content.strip()
 
-def generate_private_note_to_guest(name, rating, communication, cleanliness, houst_rules, comments):
+def generate_private_note_to_guest(name, rating, communication, cleanliness, houst_rules, private_note):
     # Get rating description for rating, communication, cleanliness, and house rules
     rating_description = convert_rating_to_description(rating)
     communication_description = convert_rating_to_description(communication)
@@ -70,14 +80,15 @@ def generate_private_note_to_guest(name, rating, communication, cleanliness, hou
 
     prompt = (
         f"Generate a private note to the guest for Airbnb which I host based on the following details:\n"
-        f"Name: {name}\n"
-        f"Rating: {rating_description}\n"
+        f"Guest Name: {name}\n"
+        f"Guest Overall Rating: {rating_description}\n"
         f"Communication: {communication_description}\n"
         f"Cleanliness: {cleanliness_description}\n"
         f"House Rules: {houst_rules_description}\n"
-        f"Comments: {comments}\n"
+        f"Priavte Note: {private_note}\n"
+        f"Home Details: {home_details}\n"
         f"My name is {host_name} and I am the host of this Airbnb listing.\n"
-        "The note should be less than 3 sentences long, friendly, and should welcome the guest back anytime. the goal of the note should be influencing the guest to save our airbnb listing for next time."
+        "The note should be less than 4 sentences long, friendly, and should welcome the guest back anytime. One emoji can be used. the goal of the note should be influencing the guest to save our airbnb listing for next time."
     )
 
     response = client.chat.completions.create(
@@ -95,14 +106,14 @@ def main():
     args = parser.parse_args()
     name = ' '.join(args.name)
     # Get user input for ratings and comments
-    rating = get_user_input('Please rate the service (1 for bad, 2 for ok, 3 for good): ')
+    rating = get_user_rating('Please rate the service (1 for bad, 2 for ok, 3 for good): ')
     # optional rating for communication, cleanliness, and house rules default to 2 if not provided
-    communication = get_user_input('Please rate the communication (1 for bad, 2 for ok, 3 for good): ')
-    cleanliness = get_user_input('Please rate the cleanliness (1 for bad, 2 for ok, 3 for good): ')
-    houst_rules = get_user_input('Please rate the house rules (1 for bad, 2 for ok, 3 for good): ')
-    comments = get_user_input('Please provide any specific comments: ')
-
-    review = generate_review(name, rating, comments)
+    communication = get_user_rating('Communication (1 for bad, 2 for ok, 3 for good): ')
+    cleanliness = get_user_rating('Cleanliness (1 for bad, 2 for ok, 3 for good): ')
+    houst_rules = get_user_rating('Ability to Follow House Rules (1 for bad, 2 for ok, 3 for good): ')
+    comments = get_user_comment('Additional comments for Review: (optional) ')
+    private_note = get_user_comment('Private Note Comments: (optional) ')
+    review = generate_review(name, rating, communication, cleanliness, houst_rules, comments)
 
     print('Generated Review:')
     print(review)
@@ -112,7 +123,7 @@ def main():
     #prompt user to press any button to contiue before generating and printing and copying to clipboard the private  note
     print('Press enter to continue...')
     input()
-    private_note = generate_private_note_to_guest(name, rating, comments)
+    private_note = generate_private_note_to_guest(name, rating, communication, cleanliness, houst_rules, private_note)
     print('Generated Private Note:')
     print(private_note)
     pyperclip.copy(private_note)
