@@ -33,6 +33,19 @@
             margin-left: 10px;
             vertical-align: middle;
         }
+
+        .form-group {
+            margin-bottom: 0.75rem; /* Adjust spacing between form groups */
+        }
+
+        @media (max-width: 576px) {
+            .form-row {
+                flex-direction: column;
+            }
+            .form-row .form-group {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -47,32 +60,33 @@
         <div class="row">
             <div class="col-lg-6 mb-4">
                 <form action="/generate_review" method="post" class="needs-validation" novalidate>
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                        <div class="invalid-feedback">
-                            Please enter a name.
+                    <div class="form-row">
+                        <div class="form-group col-md-6 d-flex align-items-center">
+                            <label for="name" class="mr-2">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                            <div class="invalid-feedback">
+                                Please enter a name.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 d-flex align-items-center">
+                            <label class="mr-2">Overall Rating (1-3):</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="rating1" name="rating" value="1">
+                                <label class="form-check-label" for="rating1">1</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="rating2" name="rating" value="2" checked>
+                                <label class="form-check-label" for="rating2">2</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="rating3" name="rating" value="3">
+                                <label class="form-check-label" for="rating3">3</label>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Overall Rating (1-3):</label><br>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="rating1" name="rating" value="1">
-                            <label class="form-check-label" for="rating1">1</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="rating2" name="rating" value="2" checked>
-                            <label class="form-check-label" for="rating2">2</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="rating3" name="rating" value="3">
-                            <label class="form-check-label" for="rating3">3</label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Communication (1-3):</label><br>
+                    <div class="form-group d-flex align-items-center">
+                        <label class="mr-2">Communication (1-3):</label>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" id="communication1" name="communication" value="1">
                             <label class="form-check-label" for="communication1">1</label>
@@ -87,8 +101,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Cleanliness (1-3):</label><br>
+                    <div class="form-group d-flex align-items-center">
+                        <label class="mr-2">Cleanliness (1-3):</label>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" id="cleanliness1" name="cleanliness" value="1">
                             <label class="form-check-label" for="cleanliness1">1</label>
@@ -103,8 +117,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>House Rules (1-3):</label><br>
+                    <div class="form-group d-flex align-items-center">
+                        <label class="mr-2">House Rules (1-3):</label>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" id="house_rules1" name="house_rules" value="1">
                             <label class="form-check-label" for="house_rules1">1</label>
