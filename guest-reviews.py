@@ -23,7 +23,7 @@ def generate_review(name, rating, comments):
     }.get(rating, 'unknown')
 
     prompt = (
-        f"Generate a brief, kind, polite, and professional guest review for Airbnb based on the following details:\n"
+        f"Generate a brief, kind, polite, and professional guest review for Airbnb which I host based on the following details:\n"
         f"Name: {name}\n"
         f"Rating: {rating_description}\n"
         f"Comments: {comments}\n"
@@ -31,12 +31,32 @@ def generate_review(name, rating, comments):
     )
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}]
     )
 
     return response.choices[0].message.content.strip()
+def generate_private_note_to_guest(name, rating, comments):
+    rating_description = {
+        '1': 'bad',
+        '2': 'ok',
+        '3': 'good'
+    }.get(rating, 'unknown')
 
+    prompt = (
+        f"Generate a private note to the guest for Airbnb which I host based on the following details:\n"
+        f"Name: {name}\n"
+        f"Rating: {rating_description}\n"
+        f"Comments: {comments}\n"
+        "The note should be less than 3 sentences long and should welcome the guest back anytime. the goal of the note should be influencing the guest to save our airbnb listing for next time."
+    )
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return response.choices[0].message.content.strip()
 def main():
     # Set up argument parser
     parser = argparse.ArgumentParser(description='Generate a guest review.')
@@ -56,6 +76,16 @@ def main():
 
     pyperclip.copy(review)
     print('The review has been copied to the clipboard.')
+    #prompt user to press any button to contiue before generating and printing and copying to clipboard the private  note
+    print('Press enter to continue...')
+    input()
+    private_note = generate_private_note_to_guest(name, rating, comments)
+    print('Generated Private Note:')
+    print(private_note)
+    pyperclip.copy(private_note)
+    print('The private note has been copied to the clipboard.')
+
+    
 
 if __name__ == "__main__":
     main()
