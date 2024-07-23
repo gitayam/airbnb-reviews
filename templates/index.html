@@ -7,6 +7,28 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --border-color: #ccc;
+        }
+
+        .dark-theme {
+            --bg-color: #121212;
+            --text-color: #fff;
+            --border-color: #333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .result-container {
+            border-left: 1px solid var(--border-color);
+            padding-left: 20px;
+        }
+
         .copy-button {
             margin-left: 10px;
             vertical-align: middle;
@@ -15,7 +37,10 @@
 </head>
 <body>
     <div class="container my-5">
-        <h1 class="text-center mb-4">Airbnb Review Generator</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Airbnb Review Generator</h1>
+            <button id="theme-toggle" class="btn btn-secondary">Toggle Theme</button>
+        </div>
         <div class="row">
             <div class="col-lg-6 mb-4">
                 <form action="/generate_review" method="post" class="needs-validation" novalidate>
@@ -123,6 +148,25 @@
         </div>
     </div>
     <script>
+        // Theme toggle function
+        document.addEventListener("DOMContentLoaded", function() {
+            const themeToggle = document.getElementById("theme-toggle");
+            const currentTheme = localStorage.getItem("theme") || "light";
+
+            if (currentTheme === "dark") {
+                document.body.classList.add("dark-theme");
+                themeToggle.innerText = "Light Mode";
+            }
+
+            themeToggle.addEventListener("click", function() {
+                document.body.classList.toggle("dark-theme");
+                const newTheme = document.body.classList.contains("dark-theme") ? "dark" : "light";
+                localStorage.setItem("theme", newTheme);
+                themeToggle.innerText = newTheme === "dark" ? "Light Mode" : "Dark Mode";
+            });
+        });
+
+        // Copy to clipboard function
         function copyToClipboard(elementId) {
             var text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text).then(function() {
