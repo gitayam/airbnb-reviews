@@ -5,7 +5,9 @@ services:
       - "${PORT_NUMBER}:${PORT_NUMBER}"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL=${MODEL}
       - HOST_NAME=${HOST_NAME}
       - HOME_DETAILS=${HOME_DETAILS}
-      - MODEL=${MODEL}
       - PORT_NUMBER=${PORT_NUMBER}
+    volumes:
+      - .:/app

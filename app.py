@@ -9,6 +9,9 @@ app = Flask(__name__)
 # Load environment variables
 load_dotenv()
 
+# Set secret key for session management
+app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key')
+
 # Load configuration from config.py
 app.config.from_object('config.Config')
 

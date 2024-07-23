@@ -36,14 +36,14 @@ def generate_review(name, rating, communication, cleanliness, house_rules, comme
     cleanliness_description = convert_rating_to_description(cleanliness)
     house_rules_description = convert_rating_to_description(house_rules)
     prompt = (
-        f"Generate a brief, kind, polite, and professional guest review for Airbnb which I host based on the following details:\n"
+        f"Generate a brief, polite, and professional guest review for an Airbnb guest which I hosted based on the following details:\n"
         f"Name: {name}\n"
         f"Rating: {rating_description}\n"
         f"Communication: {communication_description}\n"
         f"Cleanliness: {cleanliness_description}\n"
         f"House Rules: {house_rules_description}\n"
         f"Comments: {comments}\n"
-        "The review should be less than 4 sentences long. One emoji can be used."
+        "The review should be less than 4 sentences long. 1-3 emoji can be used. this review is written for other hosts to see."
     )
     response = client.chat.completions.create(
         model=model,
@@ -51,23 +51,35 @@ def generate_review(name, rating, communication, cleanliness, house_rules, comme
     )
     return response.choices[0].message.content.strip()
 
-def generate_private_note_to_guest(name, rating, communication, cleanliness, house_rules, private_note):
+def generate_private_note_to_guest(name, rating, cleanliness, house_rules, private_note):
     rating_description = convert_rating_to_description(rating)
-    communication_description = convert_rating_to_description(communication)
     cleanliness_description = convert_rating_to_description(cleanliness)
     house_rules_description = convert_rating_to_description(house_rules)
-    prompt = (
-        f"Generate a private note to the guest for Airbnb which I host based on the following details:\n"
-        f"Guest Name: {name}\n"
-        f"Guest Overall Rating: {rating_description}\n"
-        f"Communication: {communication_description}\n"
-        f"Cleanliness: {cleanliness_description}\n"
-        f"House Rules: {house_rules_description}\n"
-        f"Private Note: {private_note}\n"
-        f"Home Details: {home_details}\n"
-        f"My name is {host_name} and I am the host of this Airbnb listing.\n"
-        "The note should be less than 4 sentences long, friendly, and should welcome the guest back anytime. One emoji can be used. The goal of the note should be influencing the guest to save our Airbnb listing for next time."
-    )
+    
+    # if private note is provide use the following prompt:
+    if private_note:
+        prompt = (
+            f"Generate a private note (less than 4 sentences long, friendly) to the guest from Airbnb which I host based on the following details:\n"
+            f"Guest Name: {name}\n"
+            f"Guest Overall Rating: {rating_description}\n"
+            f"Cleanliness: {cleanliness_description}\n"
+            f"House Rules: {house_rules_description}\n"
+            f"Include something about this in the output: {private_note} \n"
+            f"Home Details: {home_details}\n"
+            f"Our name is {host_name}, \n"
+            "1-3 emoji can be used. The goal of the note should be influencing the guest to save our Airbnb listing for next time."
+        )
+    else:
+        prompt = (
+            f"Generate a private note (less than 4 sentences long, friendly where possible) to the guest from Airbnb which I host based on the following details:\n"
+            f"Guest Name: {name}\n"
+            f"Guest Overall Rating: {rating_description}\n"
+            f"Cleanliness: {cleanliness_description}\n"
+            f"House Rules: {house_rules_description}\n"
+            f"Home Details: {home_details}\n"
+            f"Our name to close out the message {host_name}, \n"
+            "1-3 emoji can be used. The goal of the note should be influencing the guest to save our Airbnb listing for next time."
+        )
     response = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": prompt}]
@@ -104,5 +116,5 @@ def generate_review_route():
     comments = request.form['comments']
     private_note = request.form['private_note']
     review = generate_review(name, rating, communication, cleanliness, house_rules, comments)
-    note = generate_private_note_to_guest(name, rating, communication, cleanliness, house_rules, private_note)
+    note = generate_private_note_to_guest(name, rating, cleanliness, house_rules, private_note)
     return render_template('index.html', review=review, note=note)

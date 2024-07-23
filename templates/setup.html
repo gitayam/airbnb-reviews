@@ -6,35 +6,44 @@
     <title>Setup Configuration</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link id="themeStylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container my-5">
-        <h1 class="text-center mb-4">Setup Configuration</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-center mb-4">Setup Configuration</h1>
+            <button id="toggleTheme" class="btn btn-secondary">Toggle Theme</button>
+        </div>
+        {% if not session.get('OPENAI_API_KEY') %}
+        <div class="alert alert-danger" role="alert">
+            <strong>API Key Missing!</strong> Please enter your OpenAI API key. <a href="https://platform.openai.com/account/api-keys" target="_blank">Get your API key here.</a>
+        </div>
+        {% endif %}
         <form action="/setup" method="post" class="needs-validation" novalidate>
             <div class="form-group">
                 <label for="api_key">OpenAI API Key:</label>
-                <input type="text" class="form-control" id="api_key" name="api_key" required>
+                <input type="text" class="form-control" id="api_key" name="api_key" value="{{ session.get('OPENAI_API_KEY', '') }}" required>
                 <div class="invalid-feedback">
                     Please enter the OpenAI API key.
                 </div>
             </div>
             <div class="form-group">
                 <label for="model">Model:</label>
-                <input type="text" class="form-control" id="model" name="model" required>
+                <input type="text" class="form-control" id="model" name="model" value="{{ session.get('MODEL', '') }}" required>
                 <div class="invalid-feedback">
                     Please enter the model name.
                 </div>
             </div>
             <div class="form-group">
                 <label for="host_name">Host Name:</label>
-                <input type="text" class="form-control" id="host_name" name="host_name" required>
+                <input type="text" class="form-control" id="host_name" name="host_name" value="{{ session.get('HOST_NAME', '') }}" required>
                 <div class="invalid-feedback">
                     Please enter the host name.
                 </div>
             </div>
             <div class="form-group">
                 <label for="home_details">Home Details:</label>
-                <input type="text" class="form-control" id="home_details" name="home_details" required>
+                <input type="text" class="form-control" id="home_details" name="home_details" value="{{ session.get('HOME_DETAILS', '') }}" required>
                 <div class="invalid-feedback">
                     Please enter the home details.
                 </div>
@@ -46,5 +55,28 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeStylesheet = document.getElementById('themeStylesheet');
+            const toggleThemeButton = document.getElementById('toggleTheme');
+
+            // Check for stored theme preference in local storage
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme) {
+                themeStylesheet.href = storedTheme;
+            }
+
+            // Toggle theme and store preference in local storage
+            toggleThemeButton.addEventListener('click', function() {
+                if (themeStylesheet.href.includes('bootstrap.min.css')) {
+                    themeStylesheet.href = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap-dark.min.css';
+                    localStorage.setItem('theme', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap-dark.min.css');
+                } else {
+                    themeStylesheet.href = 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css';
+                    localStorage.setItem('theme', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -14,5 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE ${PORT_NUMBER}
 
 # Run the Flask app when the container launches
-# running the app in the app directory
-CMD ["python", "app/app.py"] 
+CMD ["python", "app.py"]
