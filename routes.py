@@ -88,7 +88,7 @@ def generate_private_note_to_guest(name, rating, cleanliness, house_rules, priva
 def generate_review_request(name, review, private_note):
     if private_note:
         prompt = (
-            f"Generate a message to send to {name} on airbnb letting them know you just reviewed their stay and that you would like them to provide feedback and to review you back when they have a chance. Include a snippet of the review you left for them.\n"
+            f"Generate a message to send to {name} on Airbnb letting them know you just reviewed their stay and that you would like them to provide feedback and to review you back when they have a chance. Include a snippet of the review you left for them.\n"
             f"Guest Name to use {name}\n"
             f"Review to include a snippet of: {review}\n"
             f"Private Note to consider: {private_note}\n"
@@ -97,7 +97,7 @@ def generate_review_request(name, review, private_note):
         )
     else:
         prompt = (
-            f"Generate a message to send to {name} on airbnb letting them know you just reviewed their stay and that you would like them to provide feedback and to review you back when they have a chance. Include a snippet of the review you left for them\n"
+            f"Generate a message to send to {name} on Airbnb letting them know you just reviewed their stay and that you would like them to provide feedback and to review you back when they have a chance. Include a snippet of the review you left for them\n"
             f"Guest Name to use {name}\n"
             f"Review to include a snippet of: {review}\n"
             f"My name is {host_name} I am the host.\n"
@@ -124,7 +124,8 @@ def setup():
         session['HOST_NAME'] = request.form['host_name']
         session['HOME_DETAILS'] = request.form['home_details']
         return redirect(url_for('main.index'))
-    return render_template('setup.html')
+    api_key_set = 'OPENAI_API_KEY' in session
+    return render_template('setup.html', api_key_set=api_key_set)
 
 @main.route('/generate_review', methods=['POST'])
 def generate_review_route():
@@ -142,3 +143,7 @@ def generate_review_route():
     note = generate_private_note_to_guest(name, rating, cleanliness, house_rules, private_note)
     review_request = generate_review_request(name, review, private_note)
     return render_template('index.html', review=review, note=note, review_request=review_request)
+
+@main.route('/generate_review', methods=['GET'])
+def generate_review_get():
+    return redirect(url_for('main.index'))
